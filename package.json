@@ -7,7 +7,7 @@
     "start": "tsc && node ./dist/app.js",
     "dev": "nodemon ./src/app.ts",
     "test": " tsc && jest --detectOpenHandles --forceExit --coverage --runInBand",
-    "testauth": " tsc && jest --detectOpenHandles --forceExit auth.test.ts",
+    "testauth": " tsc && jest --detectOpenHandles --forceExit auth.test.ts --runInBand",
     "testpost": " tsc && jest --detectOpenHandles --forceExit posts.test.ts",
     "lint": "eslint . --ext .ts"
   },

@@ -86,16 +86,13 @@ describe("Posts Tests", () => {
     expect(response.body.length).toBe(2);
   });
 
- 
   test("Test Delete Post", async () => {
     const response = await request(app).delete("/posts/" + postId)
       .set({ authorization: "JWT " + testUser.token });
     expect(response.statusCode).toBe(200);
     const response2 = await request(app).get("/posts/" + postId);
-    expect(response2.statusCode).not.toBe(200);
+    expect(response2.statusCode).toBe(404);
   });
-
-
 
   test("Test Create Post fail", async () => {
     const response = await request(app).post("/posts")

@@ -1,88 +1,191 @@
 import request from "supertest";
 import initApp from "../server";
 import mongoose from "mongoose";
-import {Express} from "express";
-import userModel, { IUser } from "../models/user_model"; 
 import postModel from "../models/post_model";
+import { Express } from "express";
+import userModel, { IUser } from "../models/user_model";
 
-let app: Express;
+var app: Express;
 
-
-beforeAll(async()=>{
-    app= await initApp();
-    console.log('beforeAll'); 
-    await userModel.deleteMany();
-    await postModel.deleteMany();
+beforeAll(async () => {
+  console.log("beforeAll");
+  app = await initApp();
+  await userModel.deleteMany();
+  await postModel.deleteMany();
 });
 
-afterAll(async()=>{
-    console.log('afterAll'); 
-    //await postModel.deleteMany();
-    await mongoose.connection.close();
-}); 
+afterAll((done) => {
+  console.log("afterAll");
+  mongoose.connection.close();
+  done();
+});
+
+const baseUrl = "/auth";
 
 type User = IUser & {
-    accessToken?: string,
-    refreshToken?: string
-  };
-  
-  const testUser: User = {
-    email: "test@user.com",
-    password: "testpassword",
-  }
+  accessToken?: string,
+  refreshToken?: string
+};
 
-describe("auth tests", () => {
-    test("Auth test register", async () => {
-        const response = await request(app).post("/auth" + "/register").send(testUser);
-        expect(response.statusCode).toBe(200);
-      });
+const testUser: User = {
+  email: "test@user.com",
+  password: "testpassword",
+}
 
-      test("Auth test register fail", async () => {
-        const response = await request(app).post("/auth" + "/register").send(testUser);
-        expect(response.statusCode).not.toBe(200);
-      });
+describe("Auth Tests", () => {
+  test("Auth test register", async () => {
+    const response = await request(app).post(baseUrl + "/register").send(testUser);
+    expect(response.statusCode).toBe(200);
+  });
 
-    test ("Auth Login",async () => {
-        const response= await request(app).post("/auth/login").send({
-            email: testUser.email,
-            password: testUser.password
-        });
-        console.log(response.body);
-        expect(response.statusCode).toBe(200);
-        const token = response.body.token;
-        expect(token).toBeDefined();
-        const userId = response.body._id;
-        expect(userId).toBeDefined();
-        testUser.accessToken=token;
-        testUser._id=userId;
-    }); 
-    
-   test ("Get protected API",async () => {
-        const response= await request(app).post("/posts").send({
-            title: "my first post",
-            content: "this is my first post",
-            owner: testUser._id
-        });
-        expect(response.statusCode).not.toBe(201);
-        const response2= await request(app).post("/posts").set({
-            Authorization: `Bearer ${testUser.accessToken}`
-        }).send({
-            title: "my first post",
-            content: "this is my first post",
-            owner: testUser._id
-        });
-        expect(response2.statusCode).toBe(201);
+  test("Auth test register fail", async () => {
+    const response = await request(app).post(baseUrl + "/register").send(testUser);
+    expect(response.statusCode).not.toBe(200);
+  });
+
+  test("Auth test register fail", async () => {
+    const response = await request(app).post(baseUrl + "/register").send({
+      email: "sdsdfsd",
     });
-
-    test ("Get protected API invalid token",async () => {
-        const response= await request(app).post("/posts").set({
-        Authorization: `Bearer ${testUser.accessToken}` +1
-        }).send({
-            title: "my first post",
-            content: "this is my first post",
-            owner: testUser._id
-        });
-        expect(response.statusCode).not.toBe(201);
-  
+    expect(response.statusCode).not.toBe(200);
+    const response2 = await request(app).post(baseUrl + "/register").send({
+      email: "",
+      password: "sdfsd",
     });
- });
+    expect(response2.statusCode).not.toBe(200);
+  });
+
+  test("Auth test login", async () => {
+    const response = await request(app).post(baseUrl + "/login").send(testUser);
+    expect(response.statusCode).toBe(200);
+    const accessToken = response.body.accessToken;
+    const refreshToken = response.body.refreshToken;
+    expect(accessToken).toBeDefined();
+    expect(refreshToken).toBeDefined();
+    expect(response.body._id).toBeDefined();
+    testUser.accessToken = accessToken;
+    testUser.refreshToken = refreshToken;
+    testUser._id = response.body._id;
+  });
+
+  test("Check tokens are not the same", async () => {
+    const response = await request(app).post(baseUrl + "/login").send(testUser);
+    const accessToken = response.body.accessToken;
+    const refreshToken = response.body.refreshToken;
+
+    expect(accessToken).not.toBe(testUser.accessToken);
+    expect(refreshToken).not.toBe(testUser.refreshToken);
+  });
+
+  test("Auth test login fail", async () => {
+    const response = await request(app).post(baseUrl + "/login").send({
+      email: testUser.email,
+      password: "sdfsd",
+    });
+    expect(response.statusCode).not.toBe(200);
+
+    const response2 = await request(app).post(baseUrl + "/login").send({
+      email: "dsfasd",
+      password: "sdfsd",
+    });
+    expect(response2.statusCode).not.toBe(200);
+  });
+
+  test("Auth test me", async () => {
+    const response = await request(app).post("/posts").send({
+      title: "Test Post",
+      content: "Test Content",
+      owner: "sdfSd",
+    });
+    expect(response.statusCode).not.toBe(201);
+    const response2 = await request(app).post("/posts").set(
+      { authorization: "JWT " + testUser.accessToken }
+    ).send({
+      title: "Test Post",
+      content: "Test Content",
+      owner: "sdfSd",
+    });
+    expect(response2.statusCode).toBe(201);
+  });
+
+  test("Test refresh token", async () => {
+    const response = await request(app).post(baseUrl + "/refresh").send({
+      refreshToken: testUser.refreshToken,
+    });
+    expect(response.statusCode).toBe(200);
+    expect(response.body.accessToken).toBeDefined();
+    expect(response.body.refreshToken).toBeDefined();
+    testUser.accessToken = response.body.accessToken;
+    testUser.refreshToken = response.body.refreshToken;
+  });
+
+  test("Double use refresh token", async () => {
+    const response = await request(app).post(baseUrl + "/refresh").send({
+      refreshToken: testUser.refreshToken,
+    });
+    expect(response.statusCode).toBe(200);
+    const refreshTokenNew = response.body.refreshToken;
+
+    const response2 = await request(app).post(baseUrl + "/refresh").send({
+      refreshToken: testUser.refreshToken,
+    });
+    expect(response2.statusCode).not.toBe(200);
+
+    const response3 = await request(app).post(baseUrl + "/refresh").send({
+      refreshToken: refreshTokenNew,
+    });
+    expect(response3.statusCode).not.toBe(200);
+  });
+
+  test("Test logout", async () => {
+    const response = await request(app).post(baseUrl + "/login").send(testUser);
+    expect(response.statusCode).toBe(200);
+    testUser.accessToken = response.body.accessToken;
+    testUser.refreshToken = response.body.refreshToken;
+
+    const response2 = await request(app).post(baseUrl + "/logout").send({
+      refreshToken: testUser.refreshToken,
+    });
+    expect(response2.statusCode).toBe(200);
+
+    const response3 = await request(app).post(baseUrl + "/refresh").send({
+      refreshToken: testUser.refreshToken,
+    });
+    expect(response3.statusCode).not.toBe(200);
+
+  });
+
+  jest.setTimeout(10000);
+  test("Test timeout token ", async () => {
+    const response = await request(app).post(baseUrl + "/login").send(testUser);
+    expect(response.statusCode).toBe(200);
+    testUser.accessToken = response.body.accessToken;
+    testUser.refreshToken = response.body.refreshToken;
+
+    await new Promise((resolve) => setTimeout(resolve, 5000));
+
+    const response2 = await request(app).post("/posts").set(
+      { authorization: "JWT " + testUser.accessToken }
+    ).send({
+      title: "Test Post",
+      content: "Test Content",
+      owner: "sdfSd",
+    });
+    expect(response2.statusCode).not.toBe(201);
+
+    const response3 = await request(app).post(baseUrl + "/refresh").send({
+      refreshToken: testUser.refreshToken,
+    });
+    expect(response3.statusCode).toBe(200);
+    testUser.accessToken = response3.body.accessToken;
+
+    const response4 = await request(app).post("/posts").set(
+      { authorization: "JWT " + testUser.accessToken }
+    ).send({
+      title: "Test Post",
+      content: "Test Content",
+      owner: "sdfSd",
+    });
+    expect(response4.statusCode).toBe(201);
+  });
+});
