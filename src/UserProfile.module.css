@@ -1,0 +1,99 @@
+/* רקע דף כמו בשאר הדפים */
+.profileContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  width: 100%;
+  background: linear-gradient(180deg, #9fae86, #132a13);
+  box-sizing: border-box;
+  text-align: center;
+}
+
+/* כרטיס פרופיל */
+.profileCard {
+  background: rgba(207, 198, 198, 0.7); /* הוספת שקיפות */
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  width: 80%; /* מותאם לרוחב הדף */
+  max-width: 600px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-bottom: 2rem; /* נוסיף padding תחתון */
+}
+
+/* סגנון התמונה של הפרופיל */
+.profileImageContainer {
+  margin-bottom: 20px;
+}
+
+.profileImage {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+}
+
+/* פרטי המשתמש */
+.userDetails {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+}
+
+/* פרטי המשתמש כל שדה */
+.userDetail {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin: 10px 0;
+  font-size: 1.1rem;
+}
+
+/* אייקון עריכה */
+.editIcon {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  margin-left: 10px;
+}
+
+/* תמונות הפוסטים */
+.postsContainer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px; /* הרווח בין התמונות יהיה קטן יותר */
+}
+
+.postImage {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+/* כפתור הרשמה */
+.signupButton2 {
+  display: block; /* הופך את הכפתור לאלמנט block */
+  width: 100%;
+  max-width: 400px;
+  padding: 12px;
+  font-size: 1rem;
+  color: #ffffff;
+  background: #c9184a;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 1.5rem;
+  text-align: center;
+  text-decoration: none; /* לוודא שאין קו תחתון */
+}
+
+.signupButton2:hover {
+  background: #A6C48A;
+}

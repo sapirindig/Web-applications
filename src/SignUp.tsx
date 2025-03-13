@@ -3,15 +3,14 @@ import styles from './Login.module.css';
 import logo from './Images/Logo.png';
 import { Link } from 'react-router-dom';
 
-
-
-const Login: React.FC = () => {
+const SignUp: React.FC = () => {
+  const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleSignUp = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Login Attempt:", { email, password });
+    console.log("Sign Up Attempt:", { fullName, email, password });
   };
 
   return (
@@ -22,10 +21,23 @@ const Login: React.FC = () => {
       </p>
 
       <div className={styles.loginCard}>
-        <form onSubmit={handleLogin}>
+        <form onSubmit={handleSignUp}>
           <div className={styles.inputGroup}>
             <span className={styles.inputIcon}>
               <i className="fas fa-user"></i>
+            </span>
+            <input
+              type="text"
+              className={styles.loginInput}
+              placeholder="Full Name"
+              value={fullName}
+              onChange={(e) => setFullName(e.target.value)}
+            />
+          </div>
+
+          <div className={styles.inputGroup}>
+            <span className={styles.inputIcon}>
+              <i className="fas fa-envelope"></i>
             </span>
             <input
               type="email"
@@ -49,22 +61,17 @@ const Login: React.FC = () => {
             />
           </div>
 
-          <button type="submit" className={styles.loginButton}>
-            Continue with email
+          <button className={styles.signupButton}>
+            <Link to="/userprofile" style={{ color: 'white', textDecoration: 'none' }}>Sign Up</Link>
           </button>
         </form>
       </div>
 
-      <button className={styles.Forgotpassword}>Forgot password?</button>
-
-
-<button className={styles.signupButton}>
-<Link to="/signup" style={{ color: 'white', textDecoration: 'none' }}>Sign Up</Link>
-</button>
-
-
+      <button className={styles.signupButton}>
+        <Link to="/" style={{ color: 'white', textDecoration: 'none' }}>Already have an account?</Link>
+      </button> 
     </div>
   );
 };
 
-export default Login;
+export default SignUp;

@@ -31,11 +31,24 @@ body {
 }
 
 body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
   display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
+  justify-content: center; /* מרכז את התוכן */
+  align-items: center; /* מוודא שהאלמנטים ממורכזים אנכית */
 }
+
+#root {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+}
+
 
 h1 {
   font-size: 3.2em;
