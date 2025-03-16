@@ -10,6 +10,7 @@
     "testauth": " tsc && jest --detectOpenHandles --forceExit auth.test.ts --runInBand",
     "testpost": " tsc && jest --detectOpenHandles --forceExit posts.test.ts",
     "testcomment": " tsc && jest --detectOpenHandles --forceExit comments.test.ts",
+    "testuser": " tsc && jest --detectOpenHandles --forceExit users.test.ts",
     "lint": "eslint . --ext .ts"
   },
   "author": "eden aharon",

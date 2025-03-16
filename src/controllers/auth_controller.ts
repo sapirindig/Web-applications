@@ -24,7 +24,7 @@ type tTokens = {
     refreshToken: string
 }
 
-export const generateToken = (userId: string): tTokens | null => {
+const generateToken = (userId: string): tTokens | null => {
     if (!process.env.TOKEN_SECRET) {
         return null;
     }
@@ -48,7 +48,6 @@ export const generateToken = (userId: string): tTokens | null => {
         refreshToken: refreshToken
     };
 };
-
 const login = async (req: Request, res: Response) => {
     try {
         const user = await userModel.findOne({ email: req.body.email });
@@ -199,9 +198,6 @@ export const authMiddleware = (req: Request, res: Response, next: NextFunction) 
             res.status(401).send('Access Denied');
             return;
         }
-
-        console.log("Token payload:", payload); // הוספה כאן
-
         req.params.userId = (payload as Payload)._id;
         next();
     });
