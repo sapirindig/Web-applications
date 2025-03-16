@@ -2,7 +2,8 @@ import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Login from "./Login";
 import SignUp from "./SignUp";
-import UserProfile from "./UserProfile"; // ייבוא דף ה-UserProfile
+import UserProfile from "./UserProfile"; // דף פרופיל המשתמש
+import Home from "./Home"; //   ייבוא של דף הבית
 
 const App: React.FC = () => {
   return (
@@ -12,6 +13,7 @@ const App: React.FC = () => {
           <Route path="/" element={<Login />} /> {/* דף הכניסה */}
           <Route path="/signup" element={<SignUp />} /> {/* דף ההרשמה */}
           <Route path="/userprofile" element={<UserProfile />} /> {/* דף פרופיל המשתמש */}
+          <Route path="/home" element={<Home />} /> {/* ✅ דף הבית הראשי */}
         </Routes>
       </div>
     </Router>

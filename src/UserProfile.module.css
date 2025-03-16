@@ -11,6 +11,19 @@
   text-align: center;
 }
 
+/* כפתור הבית */
+.homeButton {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+}
+
+.homeIcon {
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+}
+
 /* כרטיס פרופיל */
 .profileCard {
   background: rgba(207, 198, 198, 0.7); /* הוספת שקיפות */
@@ -96,4 +109,203 @@
 
 .signupButton2:hover {
   background: #A6C48A;
+}
+/* עיצוב כללי */
+.profileContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: linear-gradient(180deg, #9fae86, #132a13);
+  min-height: 100vh;
+  width: 100%;
+  box-sizing: border-box;
+  text-align: center;
+  padding-top: 60px;
+}
+
+/* תמונת פרופיל */
+.profileImageContainer {
+  margin-bottom: 20px;
+}
+
+.profileImage {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+}
+
+/* פוסטים */
+.postsContainer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 15px;
+  width: 80%;
+  max-width: 800px;
+}
+
+.post {
+  background: white;
+  border-radius: 10px;
+  padding: 10px;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  width: 200px;
+}
+
+.postImage {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+/* כפתור עריכה */
+.editButton {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  color: #007bff;
+}
+
+.editButton:hover {
+  color: #0056b3;
+}
+
+/* מודאל (חלון קופץ) */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modalContent {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+  max-width: 400px;
+  width: 90%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.closeButton {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: transparent;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: black;
+}
+
+/* שדה עריכת פוסט */
+.editTextArea {
+  width: 100%;
+  height: 80px;
+  margin-top: 10px;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+/* כפתור שמירה */
+.saveButton {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.saveButton:hover {
+  background-color: #218838;
+}
+/* כפתור מחיקה */
+.deleteButton {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  color: #ff4d4d;
+}
+
+.deleteButton:hover {
+  color: #cc0000;
+}
+
+/* מודאל למחיקה */
+.modalButtons {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.deleteConfirmButton {
+  background-color: #ff4d4d;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.deleteConfirmButton:hover {
+  background-color: #cc0000;
+}
+
+.cancelButton {
+  background-color: #ccc;
+  color: black;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.cancelButton:hover {
+  background-color: #999;
+}
+/* תצוגת תמונה חדשה בעריכה */
+.editImagePreview {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+/* העלאת תמונה חדשה */
+.uploadInput {
+  display: block;
+  margin: 10px auto;
+}
+
+/* כפתור שמירה */
+.saveButton {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.saveButton:hover {
+  background-color: #218838;
 }
