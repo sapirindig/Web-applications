@@ -28,18 +28,17 @@ test("Test adding new comment", async () => {
         .set({ authorization: "JWT " + testUser.token })
         .send({
             comment: "first title",
-            postId: postId,
-            owner: new mongoose.Types.ObjectId(testUser._id),
-        });
+            postId: postId.toString(), // המרה ל-string
+            owner: testUser._id, // המרה ל-string
+       });
+       console.log("Response body:", response.body);
 
-    console.log("Response body:", response.body);
-
-    expect(response.statusCode).toBe(201);
-    expect(response.body.comment).toBe("first title");
-    expect(response.body.postId).toBe(postId.toString());
-    expect(response.body.owner).toBe(testUser._id);
-    commentId = response.body._id;
-});
+       expect(response.statusCode).toBe(201);
+       expect(response.body.comment).toBe("first title");
+       expect(response.body.postId).toBe(postId.toString());
+       expect(response.body.owner).toBe(testUser._id);
+       commentId = response.body._id;
+   });
 
 test("test get comment by owner", async () => {
     const response = await request(app).get("/comments?owner=" + testUser._id);

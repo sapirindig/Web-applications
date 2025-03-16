@@ -1,22 +1,22 @@
 import mongoose, { Schema } from "mongoose";
 
 export interface iComment {
-    comment: string; // שינוי שם השדה
-    postID: Schema.Types.ObjectId; // שינוי סוג השדה
-    owner: Schema.Types.ObjectId; // שינוי סוג השדה
+    comment: string;
+    postId: Schema.Types.ObjectId;
+    owner: Schema.Types.ObjectId;
 }
 
 const commentsSchema = new mongoose.Schema<iComment>({
-    comment: { // שינוי שם השדה
+    comment: {
         type: String,
         required: true,
     },
-    postID: {
-        type: Schema.Types.ObjectId, // שינוי סוג השדה
+    postId: {
+        type: Schema.Types.ObjectId,
         required: true,
     },
     owner: {
-        type: Schema.Types.ObjectId, // שינוי סוג השדה
+        type: Schema.Types.ObjectId,
         required: true,
     },
 });
