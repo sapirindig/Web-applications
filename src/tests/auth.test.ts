@@ -4,14 +4,11 @@ import mongoose from "mongoose";
 import postModel from "../models/post_model";
 import { Express } from "express";
 import userModel, { IUser } from "../models/user_model";
+import { app } from "./setupTests";
 
-var app: Express;
 
 beforeAll(async () => {
-  console.log("beforeAll");
-  app = await initApp();
   await userModel.deleteMany();
-  await postModel.deleteMany();
 });
 
 afterAll((done) => {
