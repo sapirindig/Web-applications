@@ -2,8 +2,7 @@ import React, { useState } from "react";
 import styles from './Login.module.css';
 import logo from './Images/Logo.png';
 import { Link } from 'react-router-dom';
-
-
+import GoogleLoginButton from "./components/GoogleLoginButton";
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState("");
@@ -16,12 +15,16 @@ const Login: React.FC = () => {
 
   return (
     <div className={styles.loginContainer}>
-      <img src={logo} alt="EcoShare Logo" className={styles.logo} /> {/* הצגת הלוגו */}
+      {/* הצגת הלוגו */}
+      <img src={logo} alt="EcoShare Logo" className={styles.logo} />
+
+      {/* טקסט ברוכים הבאים */}
       <p className={styles.loginSubtitle}>
         Welcome to EcoShare – share what you don’t need, help those who need, and connect with your community!
       </p>
 
       <div className={styles.loginCard}>
+        {/* טופס התחברות עם מייל וסיסמה */}
         <form onSubmit={handleLogin}>
           <div className={styles.inputGroup}>
             <span className={styles.inputIcon}>
@@ -49,20 +52,25 @@ const Login: React.FC = () => {
             />
           </div>
 
+          {/* כפתור התחברות עם מייל */}
           <button type="submit" className={styles.loginButton}>
             Continue with email
           </button>
         </form>
+
+        {/* כפתור התחברות עם גוגל */}
+        <div className={styles.googleLoginButton}>
+          <GoogleLoginButton />
+        </div>
       </div>
 
+      {/* כפתור שחזור סיסמה */}
       <button className={styles.Forgotpassword}>Forgot password?</button>
 
-
-<button className={styles.signupButton}>
-<Link to="/signup" style={{ color: 'white', textDecoration: 'none' }}>Sign Up</Link>
-</button>
-
-
+      {/* כפתור הרשמה */}
+      <button className={styles.signupButton}>
+        <Link to="/signup" style={{ color: 'white', textDecoration: 'none' }}>Sign Up</Link>
+      </button>
     </div>
   );
 };

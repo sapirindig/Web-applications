@@ -25,9 +25,20 @@ html, body {
   text-align: center;
 }
 
+/* כפתור התחברות עם גוגל */
+.googleLoginButton {
+  margin-top: 10px;
+  width: 100%;
+  max-width: 250px; /* למנוע התרחבות מוגזמת */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px; /* יישור */
+}
+
 /* כרטיס הלוגין */
 .loginCard {
-  background:  rgba(207, 198, 198, 0.7); /* הוספת שקיפות */
+  background: rgba(207, 198, 198, 0.7); /* הוספת שקיפות */
   padding: 2rem;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
@@ -92,7 +103,7 @@ html, body {
   background: #A6C48A;
 }
 
-/* כפתור הרשמה */
+/* כפתור שחזור סיסמה */
 .Forgotpassword {
   width: 150px;
   padding: 8px;
