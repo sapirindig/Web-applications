@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import styles from './Login.module.css';
 import logo from './Images/Logo.png';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom'; // הוספנו useNavigate
 import GoogleLoginButton from "./components/GoogleLoginButton";
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();

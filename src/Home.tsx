@@ -5,6 +5,7 @@ import logoutIcon from "./Images/logout.png";
 import backIcon from "./Images/back.png";
 import { fetchPosts, Post } from "./Api"; // ייבוא הפונקציה מה-API
 
+
 const Home: React.FC = () => {
   const [posts, setPosts] = useState<Post[]>([]);
   const [selectedPost, setSelectedPost] = useState<Post | null>(null);
@@ -43,6 +44,15 @@ const Home: React.FC = () => {
           <img src={logoutIcon} alt="Log Out" className={styles.icon} />
         </Link>
       </div>
+
+    <div className={styles.homeContainer}>
+        {/* ... שאר הקוד ... */}
+        <Link to="/createpost">
+            <button>פוסט חדש</button>
+        </Link>
+        {/* ... שאר הקוד ... */}
+    </div>
+
 
       {/* הצגת הפוסטים */}
       <div className={styles.postsContainer}>

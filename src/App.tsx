@@ -5,6 +5,7 @@ import Login from "./Login";
 import SignUp from "./SignUp";
 import Home from "./Home";
 import UserProfile from "./UserProfile";
+import CreatePost from './CreatePost'; // או הנתיב הנכון
 
 const clientId = "569640409434-4pjdbccv7ffncci0bok69f13cukrbfgf.apps.googleusercontent.com"; // מזהה הלקוח שלך
 
@@ -17,6 +18,7 @@ const App: React.FC = () => {
           <Route path="/signup" element={<SignUp />} /> {/* דף ההרשמה */}
           <Route path="/home" element={<Home />} /> {/* דף הבית */}
           <Route path="/userprofile" element={<UserProfile />} /> {/* דף פרופיל המשתמש */}
+          <Route path="/createpost" element={<CreatePost />} /> {/* דף יצירת פוסט */}
         </Routes>
       </Router>
     </GoogleOAuthProvider>
