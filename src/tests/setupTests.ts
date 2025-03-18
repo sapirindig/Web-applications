@@ -1,9 +1,8 @@
-// setupTests.ts
-
 import request from "supertest";
 import initApp from "../server";
 import mongoose from "mongoose";
 import { Express } from "express";
+import { expect, beforeAll, afterAll } from '@jest/globals'; // ייבוא נכון
 
 let app: Express;
 export let testUser: { token: string; _id: string };
@@ -27,7 +26,7 @@ beforeAll(async () => {
         _id: loginResponse.body._id,
     };
 
-    console.log("testUser:", testUser); // הוספה כאן
+    console.log("testUser:", testUser);
 });
 
 afterAll(async () => {

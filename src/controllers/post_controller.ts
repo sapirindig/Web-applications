@@ -7,14 +7,16 @@ class PostsController extends BaseController<IPost> {
         super(postModel);
     }
 
+    // post_controller.ts
     async create(req: Request, res: Response) {
-        const userId = req.params.userId;
-        const post = {
-            ...req.body,
-            owner: userId
-        }
-        req.body = post;
-        super.create(req, res);
+    const userId = req.params.userId;
+    const post = {
+        ...req.body,
+        owner: userId,
+        image: req.file ? req.file.path : undefined // הוספת שדה תמונה
+    };
+    req.body = post;
+    super.create(req, res);
     };
 }
 

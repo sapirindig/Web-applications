@@ -6,10 +6,11 @@ import express, { Express } from "express";
 import postsRoute from "./routes/posts_routes";
 import commentsRoute from "./routes/comments_routes";
 import authRoutes from "./routes/auth_routes";
-import userRoutes from "./routes/user_routes"; // הוספת ייבוא
-import { authMiddleware } from "./controllers/auth_controller"; // הוספת ייבוא middleware
+import userRoutes from "./routes/user_routes";
+import { authMiddleware } from "./controllers/auth_controller";
 import swaggerJsDoc from "swagger-jsdoc";
 import swaggerUI from "swagger-ui-express";
+import path from "path"; // הוספת ייבוא path
 
 const app = express();
 app.use(bodyParser.json());
@@ -23,7 +24,10 @@ app.use((req, res, next) => {
 app.use("/posts", postsRoute);
 app.use("/comments", commentsRoute);
 app.use("/auth", authRoutes);
-app.use("/users", authMiddleware, userRoutes); // הוספת חיבור ל-routes של משתמש ו-middleware
+app.use("/users", authMiddleware, userRoutes);
+
+// הוספת הגשת תמונות סטטיות
+app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 
 const options = {
     definition: {

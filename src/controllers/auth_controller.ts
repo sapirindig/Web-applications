@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import userModel, { IUser } from '../models/user_model';
 import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
+import jwt, { Secret } from 'jsonwebtoken';
 import { Document } from 'mongoose';
 
 const register = async (req: Request, res: Response) => {
@@ -25,29 +25,37 @@ type tTokens = {
 }
 
 const generateToken = (userId: string): tTokens | null => {
-    if (!process.env.TOKEN_SECRET) {
+    if (!process.env.TOKEN_SECRET || !process.env.TOKEN_EXPIRES || !process.env.REFRESH_TOKEN_EXPIRES) {
         return null;
     }
-    // generate token
-    const random = Math.random().toString();
-    const accessToken = jwt.sign({
-        _id: userId,
-        random: random
-    },
-        process.env.TOKEN_SECRET,
-        { expiresIn: process.env.TOKEN_EXPIRES });
 
-    const refreshToken = jwt.sign({
-        _id: userId,
-        random: random
-    },
-        process.env.TOKEN_SECRET,
-        { expiresIn: process.env.REFRESH_TOKEN_EXPIRES });
-    return {
-        accessToken: accessToken,
-        refreshToken: refreshToken
-    };
+    const random = Math.random().toString();
+
+    try {
+        const accessToken = jwt.sign({
+            _id: userId,
+            random: random
+        },
+            process.env.TOKEN_SECRET as Secret,
+            { expiresIn: parseInt(process.env.TOKEN_EXPIRES) });
+
+        const refreshToken = jwt.sign({
+            _id: userId,
+            random: random
+        },
+            process.env.TOKEN_SECRET as Secret,
+            { expiresIn: parseInt(process.env.REFRESH_TOKEN_EXPIRES) });
+
+        return {
+            accessToken: accessToken,
+            refreshToken: refreshToken
+        };
+    } catch (error) {
+        console.error("Error generating tokens:", error);
+        return null;
+    }
 };
+
 const login = async (req: Request, res: Response) => {
     try {
         const user = await userModel.findOne({ email: req.body.email });
