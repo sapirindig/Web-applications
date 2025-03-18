@@ -3,34 +3,44 @@ import styles from './Login.module.css';
 import logo from './Images/Logo.png';
 import { Link, useNavigate } from 'react-router-dom';
 import GoogleLoginButton from "./components/GoogleLoginButton";
+import axios from 'axios';
+
 
 const Login: React.FC = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [error, setError] = useState("");
     const navigate = useNavigate();
 
-    const handleLogin = (e: React.FormEvent) => {
+    const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
-        console.log("Login Attempt:", { email, password });
+        try {
+            const response = await axios.post('/api/login', { email, password });
+            localStorage.setItem('authToken', response.data.accessToken);
+            localStorage.setItem('userId', response.data._id);
+            navigate('/home');
+        } catch (err) {
+            if (axios.isAxiosError(err) && err.response) {
+                setError(err.response.data);
+            } else {
+                setError('שגיאה בהתחברות. אנא נסה שוב.');
+            }
+        }
     };
 
     const handleGoogleLoginSuccess = () => {
-        navigate('/home'); // העברה למסך הבית
+        navigate('/home');
     };
 
     return (
         <div className={styles.loginContainer}>
-            {/* הצגת הלוגו */}
             <img src={logo} alt="EcoShare Logo" className={styles.logo} />
-
-            {/* טקסט ברוכים הבאים */}
             <p className={styles.loginSubtitle}>
                 Welcome to EcoShare – share what you don’t need, help those who need, and connect with your community!
             </p>
-
             <div className={styles.loginCard}>
-                {/* טופס התחברות עם מייל וסיסמה */}
                 <form onSubmit={handleLogin}>
+                    {error && <p className={styles.errorMessage}>{error}</p>}
                     <div className={styles.inputGroup}>
                         <span className={styles.inputIcon}>
                             <i className="fas fa-user"></i>
@@ -43,7 +53,6 @@ const Login: React.FC = () => {
                             onChange={(e) => setEmail(e.target.value)}
                         />
                     </div>
-
                     <div className={styles.inputGroup}>
                         <span className={styles.inputIcon}>
                             <i className="fas fa-lock"></i>
@@ -56,23 +65,15 @@ const Login: React.FC = () => {
                             onChange={(e) => setPassword(e.target.value)}
                         />
                     </div>
-
-                    {/* כפתור התחברות עם מייל */}
                     <button type="submit" className={styles.loginButton}>
                         Continue with email
                     </button>
                 </form>
-
-                {/* כפתור התחברות עם גוגל */}
                 <div className={styles.googleLoginButton}>
                     <GoogleLoginButton onSuccess={handleGoogleLoginSuccess} />
                 </div>
             </div>
-
-            {/* כפתור שחזור סיסמה */}
             <button className={styles.Forgotpassword}>Forgot password?</button>
-
-            {/* כפתור הרשמה */}
             <button className={styles.signupButton}>
                 <Link to="/signup" style={{ color: 'white', textDecoration: 'none' }}>Sign Up</Link>
             </button>
