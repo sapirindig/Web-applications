@@ -1,0 +1,109 @@
+/* CreatePostModal.module.css */
+
+/* שכבת הרקע של המודאל */
+.modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7); /* רקע שקוף כהה */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000; /* ודא שהמודאל מעל כל שאר התוכן */
+}
+
+/* תוכן המודאל */
+.modalContent {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    max-width: 500px; /* רוחב מקסימלי */
+    width: 90%; /* רוחב מותאם למכשירים ניידים */
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* צל עדין */
+}
+
+/* כותרת המודאל */
+.modalContent h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+/* שדות קלט */
+.modalContent input,
+.modalContent textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    box-sizing: border-box; /* ודא שהריפוד והגבול כלולים ברוחב */
+}
+
+/* שדה טקסט (תוכן הפוסט) */
+.modalContent textarea {
+    height: 150px; /* גובה שדה הטקסט */
+    resize: vertical; /* אפשרות לשינוי גובה אנכי */
+}
+
+/* כפתורי פעולה */
+.modalContent button {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    margin: 5px;
+}
+
+/* כפתור "צור פוסט" */
+.modalContent button:first-of-type {
+    background-color: #28a745; /* ירוק */
+    color: white;
+}
+
+.modalContent button:first-of-type:hover {
+    background-color: #218838;
+}
+
+/* כפתור "סגור" */
+.modalContent button:last-of-type {
+    background-color: #ccc; /* אפור */
+    color: black;
+}
+
+.modalContent button:last-of-type:hover {
+    background-color: #999;
+}
+
+/* כפתור סגירה (X) */
+.closeButton {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: transparent;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    color: black;
+}
+
+.closeButton:hover {
+    color: #666;
+}
+
+
+.imagePreview {
+    width: 100%;
+    max-height: 300px;
+    object-fit: contain;
+    margin-top: 10px;
+    border-radius: 5px;
+}

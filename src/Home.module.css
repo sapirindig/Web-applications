@@ -164,4 +164,27 @@
   .commentButton:hover {
     background-color: #0056b3;
   }
+
+.createPostButton {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  background-color: #007bff; /* צבע רקע */
+  color: white; /* צבע טקסט */
+  border: none;
+  border-radius: 50%; /* צורה עגולה */
+  width: 60px; /* רוחב */
+  height: 60px; /* גובה */
+  font-size: 30px; /* גודל פונט */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3); /* צל */
+  z-index: 100; /* ודא שהוא מעל שאר התוכן */
+}
+
+.createPostButton:hover {
+  background-color: #0056b3; /* צבע רקע בעת ריחוף */
+}
   
