@@ -15,10 +15,15 @@ const Login: React.FC = () => {
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-            const response = await axios.post('/api/login', { email, password });
-            localStorage.setItem('authToken', response.data.accessToken);
-            localStorage.setItem('userId', response.data._id);
-            navigate('/home');
+            const response = await axios.post('http://localhost:3000/api/login', { email, password });
+
+            if (response.status === 200) { // בדיקה שהבקשה הצליחה
+                localStorage.setItem('authToken', response.data.accessToken);
+                localStorage.setItem('userId', response.data._id);
+                navigate('/home');
+            } else {
+                setError('שגיאה בהתחברות. אנא נסה שוב.',);
+            }
         } catch (err) {
             if (axios.isAxiosError(err) && err.response) {
                 setError(err.response.data);
