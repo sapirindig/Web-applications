@@ -39,6 +39,7 @@ describe("Posts Tests", () => {
         postId = response.body._id;
     });
 
+
     test("Test get post by owner", async () => {
         const response = await request(app).get("/posts?owner=" + testUser._id);
         expect(response.statusCode).toBe(200);
@@ -86,4 +87,5 @@ describe("Posts Tests", () => {
             });
         expect(response.statusCode).toBe(400);
     });
+    
 });
