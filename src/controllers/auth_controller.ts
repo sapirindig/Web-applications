@@ -4,6 +4,42 @@ import bcrypt from 'bcrypt';
 import jwt, { Secret } from 'jsonwebtoken';
 import { Document } from 'mongoose';
 
+const generateToken = (userId: string): { accessToken: string; refreshToken: string } | null => {
+    if (!process.env.TOKEN_SECRET || !process.env.TOKEN_EXPIRES || !process.env.REFRESH_TOKEN_EXPIRES) {
+        return null;
+    }
+
+    const random = Math.random().toString();
+
+    try {
+        const accessToken = jwt.sign(
+            {
+                _id: userId,
+                random: random,
+            },
+            process.env.TOKEN_SECRET as Secret,
+            { expiresIn: parseInt(process.env.TOKEN_EXPIRES) }
+        );
+
+        const refreshToken = jwt.sign(
+            {
+                _id: userId,
+                random: random,
+            },
+            process.env.TOKEN_SECRET as Secret,
+            { expiresIn: parseInt(process.env.REFRESH_TOKEN_EXPIRES) }
+        );
+
+        return {
+            accessToken: accessToken,
+            refreshToken: refreshToken,
+        };
+    } catch (error) {
+        console.error('Error generating tokens:', error);
+        return null;
+    }
+};
+
 const register = async (req: Request, res: Response) => {
     try {
         const password = req.body.password;
@@ -13,46 +49,21 @@ const register = async (req: Request, res: Response) => {
             email: req.body.email,
             password: hashedPassword,
         });
-        res.status(200).send(user);
+
+        // Generate token after user creation
+        const tokens = generateToken(user._id.toString()); // user._id is an object, so convert to string
+
+        if (!tokens) {
+            return res.status(500).send('Server Error: Token generation failed');
+        }
+
+        res.status(200).send({
+            user: user,
+            accessToken: tokens.accessToken,
+            refreshToken: tokens.refreshToken,
+        });
     } catch (err) {
         res.status(400).send(err);
-    }
-};
-
-type tTokens = {
-    accessToken: string,
-    refreshToken: string
-}
-
-const generateToken = (userId: string): tTokens | null => {
-    if (!process.env.TOKEN_SECRET || !process.env.TOKEN_EXPIRES || !process.env.REFRESH_TOKEN_EXPIRES) {
-        return null;
-    }
-
-    const random = Math.random().toString();
-
-    try {
-        const accessToken = jwt.sign({
-            _id: userId,
-            random: random
-        },
-            process.env.TOKEN_SECRET as Secret,
-            { expiresIn: parseInt(process.env.TOKEN_EXPIRES) });
-
-        const refreshToken = jwt.sign({
-            _id: userId,
-            random: random
-        },
-            process.env.TOKEN_SECRET as Secret,
-            { expiresIn: parseInt(process.env.REFRESH_TOKEN_EXPIRES) });
-
-        return {
-            accessToken: accessToken,
-            refreshToken: refreshToken
-        };
-    } catch (error) {
-        console.error("Error generating tokens:", error);
-        return null;
     }
 };
 
@@ -79,43 +90,43 @@ const login = async (req: Request, res: Response) => {
             return;
         }
         if (!user.refreshToken) {
-            user.refreshToken = [];
+            user.refreshToken =[];
         }
         user.refreshToken.push(tokens.refreshToken);
         await user.save();
-        res.status(200).send(
-            {
-                accessToken: tokens.accessToken,
-                refreshToken: tokens.refreshToken,
-                _id: user._id
-            });
-
+        res.status(200).send({
+            accessToken: tokens.accessToken,
+            refreshToken: tokens.refreshToken,
+            _id: user._id,
+        });
     } catch (err) {
         res.status(400).send(err);
     }
 };
 
-type tUser = Document<unknown, {}, IUser> & IUser & Required<{
-    _id: string;
-}> & {
-    __v: number;
-}
+type tUser = Document<unknown, {}, IUser> &
+    IUser &
+    Required<{
+        _id: string;
+    }> & {
+        __v: number;
+    };
 const verifyRefreshToken = (refreshToken: string | undefined) => {
     return new Promise<tUser>((resolve, reject) => {
         //get refresh token from body
         if (!refreshToken) {
-            reject("fail");
+            reject('fail');
             return;
         }
         //verify token
         if (!process.env.TOKEN_SECRET) {
-            reject("fail");
+            reject('fail');
             return;
         }
         jwt.verify(refreshToken, process.env.TOKEN_SECRET, async (err: any, payload: any) => {
             if (err) {
-                reject("fail");
-                return
+                reject('fail');
+                return;
             }
             //get the user id fromn token
             const userId = payload._id;
@@ -123,13 +134,13 @@ const verifyRefreshToken = (refreshToken: string | undefined) => {
                 //get the user form the db
                 const user = await userModel.findById(userId);
                 if (!user) {
-                    reject("fail");
+                    reject('fail');
                     return;
                 }
                 if (!user.refreshToken || !user.refreshToken.includes(refreshToken)) {
-                    user.refreshToken = [];
+                    user.refreshToken =[];
                     await user.save();
-                    reject("fail");
+                    reject('fail');
                     return;
                 }
                 const tokens = user.refreshToken!.filter((token) => token !== refreshToken);
@@ -137,20 +148,20 @@ const verifyRefreshToken = (refreshToken: string | undefined) => {
 
                 resolve(user);
             } catch (err) {
-                reject("fail");
+                reject('fail');
                 return;
             }
         });
     });
-}
+};
 
 const logout = async (req: Request, res: Response) => {
     try {
         const user = await verifyRefreshToken(req.body.refreshToken);
         await user.save();
-        res.status(200).send("success");
+        res.status(200).send('success');
     } catch (err) {
-        res.status(400).send("fail");
+        res.status(400).send('fail');
     }
 };
 
@@ -158,7 +169,7 @@ const refresh = async (req: Request, res: Response) => {
     try {
         const user = await verifyRefreshToken(req.body.refreshToken);
         if (!user) {
-            res.status(400).send("fail");
+            res.status(400).send('fail');
             return;
         }
         const tokens = generateToken(user._id);
@@ -168,19 +179,18 @@ const refresh = async (req: Request, res: Response) => {
             return;
         }
         if (!user.refreshToken) {
-            user.refreshToken = [];
+            user.refreshToken =[];
         }
         user.refreshToken.push(tokens.refreshToken);
         await user.save();
-        res.status(200).send(
-            {
-                accessToken: tokens.accessToken,
-                refreshToken: tokens.refreshToken,
-                _id: user._id
-            });
+        res.status(200).send({
+            accessToken: tokens.accessToken,
+            refreshToken: tokens.refreshToken,
+            _id: user._id,
+        });
         //send new token
     } catch (err) {
-        res.status(400).send("fail");
+        res.status(400).send('fail');
     }
 };
 
@@ -212,8 +222,9 @@ export const authMiddleware = (req: Request, res: Response, next: NextFunction) 
 };
 
 export default {
-    register,
-    login,
-    refresh,
-    logout
+    register: register as (req: Request, res: Response) => Promise<void>,
+    login: login as (req: Request, res: Response) => Promise<void>,
+    refresh: refresh as (req: Request, res: Response) => Promise<void>,
+    logout: logout as (req: Request, res: Response) => Promise<void>,
+
 };
