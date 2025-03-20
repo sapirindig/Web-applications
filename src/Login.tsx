@@ -15,20 +15,20 @@ const Login: React.FC = () => {
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-            const response = await axios.post('http://localhost:3000/api/login', { email, password });
-
-            if (response.status === 200) { // בדיקה שהבקשה הצליחה
+            const response = await axios.post('http://localhost:3000/auth/login', { email, password });
+    
+            if (response.status === 200) {
                 localStorage.setItem('authToken', response.data.accessToken);
                 localStorage.setItem('userId', response.data._id);
                 navigate('/home');
             } else {
-                setError('שגיאה בהתחברות. אנא נסה שוב.',);
+                setError('Invalid email or password');
             }
         } catch (err) {
-            if (axios.isAxiosError(err) && err.response) {
-                setError(err.response.data);
+            if (axios.isAxiosError(err) && err.response && err.response.status === 401) {
+                setError('Invalid email or password');
             } else {
-                setError('שגיאה בהתחברות. אנא נסה שוב.');
+                setError('Login failed. Please try again.');
             }
         }
     };
