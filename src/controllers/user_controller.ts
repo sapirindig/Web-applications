@@ -9,7 +9,7 @@ import { Request, Response } from "express";
             if (!user) {
                 return res.status(404).send("User not found");
             }
-            const posts = await postModel.find({ owner: userId }); // קבלת פוסטים של המשתמש
+            const posts = await postModel.find({ owner: userId }); 
             res.status(200).send({ user, posts });
         } catch (err) {
             res.status(400).send(err);
@@ -19,23 +19,23 @@ import { Request, Response } from "express";
     export const updateUserProfile = async (req: Request, res: Response) => {
         try {
             const userId = req.params.id;
-            const { username, profileImage } = req.body;
-    
+            const { username, profileImage, fullName } = req.body;  
+
             console.log("updateUserProfile called");
             console.log("userId:", userId);
             console.log("req.body:", req.body);
-    
+        
             const updatedUser = await userModel.findByIdAndUpdate(
                 userId,
-                { username, profileImage },
+                { username, profileImage, fullName },  
                 { new: true }
             );
-    
+        
             if (!updatedUser) {
                 console.log("User not found");
                 return res.status(404).send("User not found");
             }
-    
+        
             console.log("User updated successfully:", updatedUser);
             res.status(200).send(updatedUser);
         } catch (err) {
@@ -43,3 +43,4 @@ import { Request, Response } from "express";
             res.status(400).send(err);
         }
     };
+    

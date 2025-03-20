@@ -29,6 +29,7 @@ import authController from "../controllers/auth_controller";
 *       required:
 *         - email
 *         - password
+*         - fullName  # הוספנו את fullName כדרישה
 *       properties:
 *         email:
 *           type: string
@@ -36,9 +37,13 @@ import authController from "../controllers/auth_controller";
 *         password:
 *           type: string
 *           description: The user password
+*         fullName:
+*           type: string
+*           description: The user full name
 *       example:
 *         email: 'bob@gmail.com'
 *         password: '123456'
+*         fullName: 'Bob Example'
 */
 
 /**

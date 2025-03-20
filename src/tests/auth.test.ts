@@ -27,12 +27,14 @@ type User = IUser & {
   accessToken?: string,
   refreshToken?: string,
   username: string,
+  fullName: string,  // הוספנו את fullName כאן
 };
 
 const testUser: User = {
   email: "test@user.com",
   password: "testpassword",
   username: "testuser",
+  fullName: "Test User",  // הוספנו את fullName
 }
 
 describe("Auth Tests", () => {
@@ -192,5 +194,3 @@ describe("Auth Tests", () => {
     expect(response4.statusCode).toBe(201);
   });
 });
-
-

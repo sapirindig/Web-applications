@@ -6,18 +6,20 @@ import { Document } from 'mongoose';
 
 const register = async (req: Request, res: Response) => {
     try {
-        const password = req.body.password;
+        const { email, password, fullName } = req.body; 
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
         const user = await userModel.create({
-            email: req.body.email,
+            email,
             password: hashedPassword,
+            fullName,  
         });
         res.status(200).send(user);
     } catch (err) {
         res.status(400).send(err);
     }
 };
+
 
 type tTokens = {
     accessToken: string,
