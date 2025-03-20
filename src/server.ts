@@ -10,21 +10,30 @@ import userRoutes from "./routes/user_routes";
 import { authMiddleware } from "./controllers/auth_controller";
 import swaggerJsDoc from "swagger-jsdoc";
 import swaggerUI from "swagger-ui-express";
-import path from "path"; // הוספת ייבוא path
+import path from "path";
+import cors from "cors"; // הוספת ייבוא cors
 
 const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use((req, res, next) => {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "*");
-    res.header("Access-Control-Allow-Methods", "*");
-    next();
-});
+
+// הגדרת CORS עם אפשרויות ספציפיות
+app.use(cors({
+    origin: "http://localhost:5173", // או כתובת ה-origin של הפרונט שלך
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+    credentials: true,
+    allowedHeaders: ["Content-Type", "Authorization"],
+    exposedHeaders: ["accessToken", "refreshToken"],
+}));
+
+// טיפול בבקשות OPTIONS עבור /posts
+app.options('/posts', cors());
+
 app.use("/posts", postsRoute);
 app.use("/comments", commentsRoute);
 app.use("/auth", authRoutes);
 app.use("/users", authMiddleware, userRoutes);
+app.use('/uploads', express.static('uploads'));
 
 // הוספת הגשת תמונות סטטיות
 app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
