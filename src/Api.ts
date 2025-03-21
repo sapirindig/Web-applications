@@ -1,6 +1,5 @@
 const API_URL: string = import.meta.env.VITE_REACT_APP_API_URL || "http://localhost:3000";
 
-// מבנה הפוסט
 interface Post {
     _id: string;
     title: string;
@@ -14,14 +13,15 @@ interface Post {
     updatedAt?: string;
 }
 
-// 🟢 משיכת כל הפוסטים מהשרת
 async function fetchPosts(): Promise<Post[] | null> {
     console.log("Fetching posts from:", `${API_URL}/posts`); 
     try {
+        const authToken = localStorage.getItem('authToken');
         const response = await fetch(`${API_URL}/posts`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
+                "Authorization": `Bearer ${authToken}`
             },
         });
 
@@ -38,15 +38,15 @@ async function fetchPosts(): Promise<Post[] | null> {
     }
 }
 
-// 🟢 פונקציה להוספת פוסט חדש
-async function addPost(newPost: Omit<Post, "_id">): Promise<Post | null> {
+async function addPost(formData: FormData): Promise<Post | null> {
     try {
-        const response = await fetch(`${API_URL}/posts`, {
+        const authToken = localStorage.getItem('authToken');
+        const response = await fetch(`${API_URL}/posts`, { // תיקון ה-endpoint
             method: "POST",
             headers: {
-                "Content-Type": "application/json",
+                "Authorization": `Bearer ${authToken}`
             },
-            body: JSON.stringify(newPost),
+            body: formData, // שליחת FormData במקום JSON
         });
 
         if (!response.ok) {
@@ -62,13 +62,14 @@ async function addPost(newPost: Omit<Post, "_id">): Promise<Post | null> {
     }
 }
 
-// 🟢 פונקציה לעדכון פוסט קיים
 async function updatePost(postId: string, updatedData: Partial<Post>): Promise<Post | null> {
     try {
+        const authToken = localStorage.getItem('authToken');
         const response = await fetch(`${API_URL}/posts/${postId}`, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
+                "Authorization": `Bearer ${authToken}`
             },
             body: JSON.stringify(updatedData),
         });
@@ -86,13 +87,14 @@ async function updatePost(postId: string, updatedData: Partial<Post>): Promise<P
     }
 }
 
-// 🟢 פונקציה למחיקת פוסט
 async function deletePost(postId: string): Promise<boolean> {
     try {
+        const authToken = localStorage.getItem('authToken');
         const response = await fetch(`${API_URL}/posts/${postId}`, {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json",
+                "Authorization": `Bearer ${authToken}`
             },
         });
 

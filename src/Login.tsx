@@ -16,26 +16,36 @@ const Login: React.FC = () => {
         e.preventDefault();
         try {
             const response = await axios.post('http://localhost:3000/auth/login', { email, password });
+<<<<<<< HEAD
 
             if (response.status === 200) { // בדיקה שהבקשה הצליחה
+=======
+            console.log("Login response:", response); // הוספה כאן
+            if (response.status === 200) {
+>>>>>>> cd18f9bf4dbef941d1294ebc7621b02cc475593c
                 localStorage.setItem('authToken', response.data.accessToken);
                 localStorage.setItem('userId', response.data._id);
+                localStorage.setItem("authToken", response.data.accessToken);
+                console.log("Saved token to localStorage:", response.data.accessToken);
                 navigate('/home');
             } else {
-                setError('שגיאה בהתחברות. אנא נסה שוב.',);
+                setError('Invalid email or password');
             }
         } catch (err) {
-            if (axios.isAxiosError(err) && err.response) {
-                setError(err.response.data);
+            console.error("Login error:", err); // הוספה כאן
+            if (axios.isAxiosError(err) && err.response && err.response.status === 401) {
+                setError('Invalid email or password');
             } else {
-                setError('שגיאה בהתחברות. אנא נסה שוב.');
+                setError('Login failed. Please try again.');
             }
-        }
-    };
 
-    const handleGoogleLoginSuccess = () => {
-        navigate('/home');
+        }
+        
     };
+    
+    function handleGoogleLoginSuccess(): void {
+        throw new Error("Function not implemented.");
+    }
 
     return (
         <div className={styles.loginContainer}>
