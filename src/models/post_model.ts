@@ -4,7 +4,7 @@ export interface IPost {
   title: string;
   content: string;
   owner: string;
-  image?: string;
+  image?: string; // הוספת שדה עבור שם הקובץ של התמונה
 }
 
 const postSchema = new mongoose.Schema<IPost>({
@@ -17,7 +17,10 @@ const postSchema = new mongoose.Schema<IPost>({
     type: String,
     required: true,
   },
-  image: String,
+  image: { // הוספת שדה עבור שם הקובץ של התמונה לסכמה
+    type: String,
+    default: "",
+  },
 });
 
 const postModel = mongoose.model<IPost>("Posts", postSchema);
