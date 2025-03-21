@@ -16,13 +16,8 @@ const Login: React.FC = () => {
         e.preventDefault();
         try {
             const response = await axios.post('http://localhost:3000/auth/login', { email, password });
-<<<<<<< HEAD
 
             if (response.status === 200) { // בדיקה שהבקשה הצליחה
-=======
-            console.log("Login response:", response); // הוספה כאן
-            if (response.status === 200) {
->>>>>>> cd18f9bf4dbef941d1294ebc7621b02cc475593c
                 localStorage.setItem('authToken', response.data.accessToken);
                 localStorage.setItem('userId', response.data._id);
                 localStorage.setItem("authToken", response.data.accessToken);

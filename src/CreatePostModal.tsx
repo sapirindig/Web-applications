@@ -4,11 +4,7 @@ import styles from './CreatePostModal.module.css';
 interface CreatePostModalProps {
     isOpen: boolean;
     onClose: () => void;
-<<<<<<< HEAD
     onCreate: (postData: { title: string; content: string; owner: string; image?: File; }) => void;
-=======
-    onCreate: (postData: { title: string; content: string; owner:string; image?: File; }) => void;
->>>>>>> cd18f9bf4dbef941d1294ebc7621b02cc475593c
 }
 
 const CreatePostModal: React.FC<CreatePostModalProps> = ({ isOpen, onClose, onCreate }) => {

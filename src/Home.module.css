@@ -188,13 +188,29 @@ h1 {
 }
 
 /* רשימת התגובות */
-.commentsList {
+.commentsListContainer {
   max-height: 250px;
   overflow-y: auto;
   border: 1px solid #ccc;
   padding: 10px;
   border-radius: 5px;
   background: #f9f9f9;
+  margin-bottom: 10px; /* הוספת מרווח מתחת לרשימת התגובות */
+}
+
+.commentsList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.commentItem { /* עיצוב כל תגובה */
+  border-bottom: 1px solid #eee;
+  padding: 8px 0;
+}
+
+.commentItem:last-child {
+  border-bottom: none;
 }
 
 /* הוספת תגובה */
@@ -226,23 +242,14 @@ h1 {
 
 .createPostButton {
   position: fixed;
-  bottom: 20px;
-  left: 20px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 50%;
-  width: 60px;
-  height: 60px;
-  font-size: 30px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-  z-index: 100;
 }
 
-.createPostButton:hover {
-  background-color: #0056b3;
+.commentItem:last-child {
+  border-bottom: none;
+}
+
+.commentInputContainer {
+  display: flex;
+  margin-top: 10px;
+  gap: 10px;
 }
