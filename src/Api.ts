@@ -1,4 +1,4 @@
-const API_URL: string = import.meta.env.VITE_REACT_APP_API_URL || "https://node47.cs.colman.ac.il:3000";
+const API_URL: string = import.meta.env.VITE_REACT_APP_API_URL || "http://localhost:3000";
 
 // מבנה הפוסט
 interface Post {
@@ -16,6 +16,7 @@ interface Post {
 
 // 🟢 משיכת כל הפוסטים מהשרת
 async function fetchPosts(): Promise<Post[] | null> {
+    console.log("Fetching posts from:", `${API_URL}/posts`); 
     try {
         const response = await fetch(`${API_URL}/posts`, {
             method: "GET",

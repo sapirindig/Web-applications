@@ -15,7 +15,7 @@ const Login: React.FC = () => {
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-            const response = await axios.post('http://localhost:3000/api/login', { email, password });
+            const response = await axios.post('http://localhost:3000/auth/login', { email, password });
 
             if (response.status === 200) { // בדיקה שהבקשה הצליחה
                 localStorage.setItem('authToken', response.data.accessToken);

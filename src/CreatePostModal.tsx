@@ -4,7 +4,7 @@ import styles from './CreatePostModal.module.css';
 interface CreatePostModalProps {
     isOpen: boolean;
     onClose: () => void;
-    onCreate: (postData: { title: string; content: string; image?: File; }) => void;
+    onCreate: (postData: { title: string; content: string; owner: string; image?: File; }) => void;
 }
 
 const CreatePostModal: React.FC<CreatePostModalProps> = ({ isOpen, onClose, onCreate }) => {
@@ -22,7 +22,8 @@ const CreatePostModal: React.FC<CreatePostModalProps> = ({ isOpen, onClose, onCr
     };
 
     const handleCreate = () => {
-        onCreate({ title, content, image: image || undefined });
+        const owner = "defaultOwner"; // Replace with actual owner value
+        onCreate({ title, content, owner, image: image || undefined });
         onClose();
     };
 
