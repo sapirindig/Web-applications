@@ -130,7 +130,9 @@ router.get("/:id", postsController.getById.bind(postsController));
  *       500:
  *         description: Server error
  */
-router.post("/", authMiddleware, postsController.create.bind(postsController));
+router.post("/", authMiddleware, async (req, res) => {
+    try {await postsController.create(req, res);}
+    catch (error) {res.status(400)}});
 
 
 /**
