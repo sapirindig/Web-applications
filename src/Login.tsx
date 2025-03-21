@@ -16,26 +16,31 @@ const Login: React.FC = () => {
         e.preventDefault();
         try {
             const response = await axios.post('http://localhost:3000/auth/login', { email, password });
-    
+            console.log("Login response:", response); // הוספה כאן
             if (response.status === 200) {
                 localStorage.setItem('authToken', response.data.accessToken);
                 localStorage.setItem('userId', response.data._id);
+                localStorage.setItem("authToken", response.data.accessToken);
+                console.log("Saved token to localStorage:", response.data.accessToken);
                 navigate('/home');
             } else {
                 setError('Invalid email or password');
             }
         } catch (err) {
+            console.error("Login error:", err); // הוספה כאן
             if (axios.isAxiosError(err) && err.response && err.response.status === 401) {
                 setError('Invalid email or password');
             } else {
                 setError('Login failed. Please try again.');
             }
-        }
-    };
 
-    const handleGoogleLoginSuccess = () => {
-        navigate('/home');
+        }
+        
     };
+    
+    function handleGoogleLoginSuccess(): void {
+        throw new Error("Function not implemented.");
+    }
 
     return (
         <div className={styles.loginContainer}>
