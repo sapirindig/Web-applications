@@ -18,6 +18,7 @@ const App: React.FC = () => {
           <Route path="/home" element={<Home />} /> {/* דף הבית */}
           <Route path="/userprofile" element={<UserProfile />} /> {/* דף פרופיל המשתמש */}
           <Route path="/login" element={<Login />} /> {/* הגדרת נתיב /login */}
+          <Route path="/profile" element={<UserProfile />} />
         </Routes>
       </Router>
     </GoogleOAuthProvider>
