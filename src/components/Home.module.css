@@ -3,7 +3,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  background: linear-gradient(180deg, #9fae86, #132a13);
+  background: linear-gradient(180deg, #d0e7d2, #204e4a); /* עדכון הצבעים */
   min-height: 100vh;
   width: 100%;
   box-sizing: border-box;
@@ -12,44 +12,63 @@
   padding-top: 60px;
 }
 
-/* סרגל ניווט - עיצוב משופר */
+/* סרגל ניווט - עיצוב צד ימין אנכי */
 .navbar {
-  position: sticky;
+  position: fixed;
   top: 0;
-  background-color: rgba(255, 255, 255, 0.9); /* רקע לבן שקוף */
+  right: 0;
+  height: 100vh;
+  width: 200px;
+  background-color: rgba(255, 255, 255, 0.2);
   color: #333;
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
+  justify-content: flex-start;
   align-items: center;
-  padding: 15px 20px;
-  width: 100%;
+  padding: 20px 10px;
   z-index: 100;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* צל עדין */
-  border-bottom: 1px solid #e0e0e0; /* קו תחתון עדין */
-}
-/* שם משתמש בסרגל */
-.username {
-  font-size: 18px;
-  font-weight: 600; /* טקסט מעובה יותר */
+  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+  border-left: 1px solid #e0e0e0;
 }
 
-/* כפתורי פרופיל ויציאה בסרגל - עיצוב משופר */
+.username {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+  background-color: rgba(255, 255, 255, 0.8);
+  padding: 8px 12px;
+  border-radius: 10px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  z-index: 200;
+}
+
+/* כפתורי פרופיל ויציאה בסרגל - אחד מתחת לשני, עם מסגרת זהה */
 .profileButton,
 .logoutButton {
-  background-color: #e8f5e9;
-  color: #1b5e20;
+  background-color: #ffffff; /* צבע מותאם לדף התחברות */
+  color: #000000;
   border: none;
-  padding: 10px 15px;
+  height: 45px;
+  width: 100%;
+  max-width: 180px;
   border-radius: 20px;
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
   cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease; /* מעבר חלק ושינוי גודל */
-  margin-left: 10px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  box-sizing: border-box;
 }
 
 .profileButton:hover,
 .logoutButton:hover {
-  background-color: #c8e6c9;
-  transform: scale(1.05); /* הגדלה קלה בעת ריחוף */
+  background-color: #114c47; /* צבע ריחוף */
+  transform: scale(1.05);
 }
 
 /* כפתור חזרה */
@@ -65,32 +84,20 @@
   cursor: pointer;
 }
 
-/* כפתור יציאה */
-.logoutButton {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-}
-
-.logoutButton img {
-  width: 30px;
-  height: 30px;
-  cursor: pointer;
-}
-
 /* כותרת העמוד - עיצוב משופר */
 h1 {
-  font-size: 32px; /* גודל גדול יותר */
+  font-size: 32px;
   color: white;
   margin-bottom: 20px;
   position: sticky;
-  top: 60px; /* מיקום מתחת לסרגל הניווט */
+  top: 60px;
   background-color: inherit;
-  z-index: 99; /* מתחת לסרגל הניווט */
+  z-index: 99;
   padding: 15px 0;
   width: 100%;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); /* צל טקסט עדין */
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
+
 /* אזור הפוסטים */
 .postsContainer {
   display: grid;
@@ -132,25 +139,13 @@ h1 {
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
+  width: 100vw;
+  height: 100vh;
   background: rgba(0, 0, 0, 0.7);
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-.modalOverlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(0, 0, 0, 0.7); /* רקע שקוף למחצה */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 10000; /* z-index גבוה יותר */
+  z-index: 10000;
 }
 
 .modalContent {
@@ -158,15 +153,15 @@ h1 {
   padding: 20px;
   border-radius: 8px;
   text-align: center;
-  width: 60vw; /* רוחב החלון הקופץ */
-  height: 35vw; /* גובה החלון הקופץ */ /* הסרת מגבלת גובה מקסימלית */
-  aspect-ratio: 1 / 1; /* יחס רוחב-גובה של 1:1 (ריבוע) */
+  width: 60vw;
+  height: 35vw;
+  aspect-ratio: 1 / 1;
   position: relative;
   display: flex;
   flex-direction: column;
 }
 
-/* עיצוב גוף המודאל - תמונה בצד שמאל, תגובות בצד ימין */
+/* עיצוב גוף המודאל */
 .modalBody {
   display: flex;
   gap: 20px;
@@ -195,7 +190,7 @@ h1 {
   padding: 10px;
   border-radius: 5px;
   background: #f9f9f9;
-  margin-bottom: 10px; /* הוספת מרווח מתחת לרשימת התגובות */
+  margin-bottom: 10px;
 }
 
 .commentsList {
@@ -204,7 +199,7 @@ h1 {
   margin: 0;
 }
 
-.commentItem { /* עיצוב כל תגובה */
+.commentItem {
   border-bottom: 1px solid #eee;
   padding: 8px 0;
 }
@@ -240,30 +235,32 @@ h1 {
   background-color: #0056b3;
 }
 
-
 .createPostButton {
   position: fixed;
   bottom: 20px;
-  left: 20px;
-  background-color: blue;
+  left: 20px; 
+  background: linear-gradient(145deg, #1a936f, #114c47); 
   color: white;
-  padding: 10px 20px;
   border: none;
+  width: 60px;
+  height: 60px;
   border-radius: 50%;
-  font-size: 20px;
+  font-size: 30px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
   cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
   z-index: 1000;
 }
 
-.commentItem:last-child {
-  border-bottom: none;
+.createPostButton:hover {
+  transform: scale(1.1);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
 }
 
-.commentInputContainer {
-  display: flex;
-  margin-top: 10px;
-  gap: 10px;
-}
 
 .likes {
   display: flex;
