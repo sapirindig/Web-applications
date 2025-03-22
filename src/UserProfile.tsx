@@ -4,6 +4,7 @@ import userImage from "./Images/user.png";
 import { Link, useNavigate } from "react-router-dom";
 import homeIcon from "./Images/home.png";
 import axios from "axios";
+import EditPostModal from "./EditPostModel";
 
 interface Post {
     _id: string;
@@ -22,6 +23,7 @@ const UserProfile: React.FC = () => {
     const [userPosts, setUserPosts] = useState<Post[]>([]);
     const [showPostsModal, setShowPostsModal] = useState<boolean>(false);
     const [selectedPost, setSelectedPost] = useState<Post | null>(null);
+    const [editPost, setEditPost] = useState<Post | null>(null);
 
     const navigate = useNavigate();
 
@@ -91,87 +93,100 @@ const UserProfile: React.FC = () => {
         }
     };
 
+    const handleDeletePost = async (postId: string) => {
+        try {
+            console.log("handleDeletePost called for postId:", postId);
+            console.log("localStorage:", localStorage);
+            const token = localStorage.getItem("authToken");
+            console.log("Token from localStorage:", token);
+
+            if (!token) {
+                console.error("Token not found");
+                return;
+            }
+
+            console.log("Token found, sending delete request");
+
+            await axios.delete(`http://localhost:3000/posts/${postId}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            setUserPosts(userPosts.filter((post) => post._id !== postId));
+            console.log("Post deleted successfully");
+        } catch (error) {
+            console.error("Error deleting post:", error);
+        }
+    };
+
+    const handleEditPost = (post: Post) => {
+        setEditPost(post);
+    };
+
+    const handlePostUpdated = (updatedPost: Post) => {
+        setUserPosts(userPosts.map(post => post._id === updatedPost._id ? updatedPost : post));
+        setEditPost(null);
+    };
+
+    const handleEditProfile = () => {
+        // כאן אתה יכול להוסיף את הלוגיקה לעריכת פרופיל המשתמש
+        console.log("Edit profile clicked");
+    };
+
     return (
         <div className={styles.profileContainer}>
-            {/* כפתור הבית בצד ימין למעלה */}
             <div className={styles.homeButton}>
                 <Link to="/Home">
                     <img src={homeIcon} alt="Home" className={styles.homeIcon} />
                 </Link>
             </div>
 
-            <h1>פרופיל משתמש</h1>
+            <h1 className={showPostsModal ? styles.hidden : ""}>user profile</h1>
 
             <div className={styles.profileCard}>
                 <div className={styles.userInfo}>
                     <div className={styles.profileImageContainer}>
                         <img src={userImage} alt="User Profile" className={styles.profileImage} />
                     </div>
-
-                    {/* פרטי משתמש (ללא רווח בין השם לאימייל) */}
                     <div className={styles.userDetails}>
                         <p className={styles.userDetail}>name: {userName}</p>
                         <p className={styles.userDetail}>e-mail: {userEmail}</p>
                     </div>
-
-                    {/* כפתורים עם מרווח שווה */}
                     <div className={styles.profileButtons}>
-                        <button className={styles.profileButton}>edit profile</button>
-                        <button className={styles.profileButton} onClick={handleShowPosts}>my posts</button>
+                        <button className={styles.profileButton} onClick={handleShowPosts}>My posts</button>
+                        <button className={styles.profileButton} onClick={handleEditProfile}>Edit profile</button>
                     </div>
                 </div>
             </div>
 
-            {/* מודאל הפוסטים */}
             {showPostsModal && (
                 <div className={styles.modalOverlay} onClick={handleClosePostsModal}>
                     <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
-                        <h2>הפוסטים שלי</h2>
+                        <h2 className={styles.modalTitle}>my posts</h2>
                         <div className={styles.modalBody}>
-                            {/* הצגת כל הפוסטים של המשתמש */}
                             {userPosts.map((post) => (
-                                <div key={post._id} className={styles.post} onClick={() => handlePostClick(post)}>
-                                    <img
-                                        src={post.image || "./Images/sample.png"}
-                                        alt="Post"
-                                        className={styles.postImage}
-                                    />
+                                <div key={post._id} className={styles.post}>
+                                    <img src={post.image || "./Images/sample.png"} alt="Post" className={styles.postImage} />
                                     <div className={styles.postActions}>
                                         <span>{post.likesCount} ❤</span>
                                         <span>{post.comments?.length || 0}</span>
+                                        <button className={styles.editButton} onClick={() => handleEditPost(post)}>edit</button>
+                                        <button className={styles.deleteButton} onClick={() => handleDeletePost(post._id)}>delete</button>
                                     </div>
                                 </div>
                             ))}
                         </div>
-                        <button onClick={handleClosePostsModal}>סגור</button>
+                        <button className={styles.closeButton} onClick={handleClosePostsModal}>close</button>
                     </div>
                 </div>
             )}
 
-            {selectedPost && (
-                <div className={styles.modalOverlay} onClick={handleClosePostsModal}>
-                    <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
-                        <div className={styles.modalHeader}>
-                            <button onClick={handleClosePostsModal}>X</button>
-                        </div>
-                        <div className={styles.modalBody}>
-                            {/* הצגת פרטי הפוסט הנבחר */}
-                            {selectedPost.image && (
-                                <img
-                                    src={selectedPost.image}
-                                    alt="Post"
-                                    className={styles.postImage}
-                                />
-                            )}
-                            <h3>{selectedPost.title}</h3>
-                            <p>{selectedPost.content}</p>
-                            <div className={styles.postActions}>
-                                <span>{selectedPost.likesCount} ❤</span>
-                                <span>{selectedPost.comments?.length || 0}</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            {editPost && (
+                <EditPostModal
+                    post={editPost}
+                    onClose={() => setEditPost(null)}
+                    onPostUpdated={handlePostUpdated}
+                />
             )}
         </div>
     );
