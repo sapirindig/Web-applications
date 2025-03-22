@@ -130,7 +130,9 @@ router.get("/:id", postsController.getById.bind(postsController));
  *       500:
  *         description: Server error
  */
-router.post("/", authMiddleware, postsController.create.bind(postsController));
+router.post("/", authMiddleware, async (req, res) => {
+    try {await postsController.create(req, res);}
+    catch (error) {res.status(400)}});
 
 
 /**
@@ -159,5 +161,14 @@ router.post("/", authMiddleware, postsController.create.bind(postsController));
  *         description: Server error
  */
 router.delete("/:id", authMiddleware, postsController.deleteItem.bind(postsController));
+
+router.put("/:id/like", authMiddleware, (req, res, next) => {
+    console.log("Received PUT request for /posts/:id/like");
+    console.log("Request params:", req.params);
+    console.log("Request user:", req.user);
+    postsController.likePost(req, res).catch(next);
+  });
+
+  router.put("/:id", authMiddleware, postsController.update.bind(postsController))
 
 export default router;

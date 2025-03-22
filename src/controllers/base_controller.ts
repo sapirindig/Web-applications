@@ -1,5 +1,3 @@
-// BaseController.ts
-
 import { Request, Response } from "express";
 import { Model } from "mongoose";
 
@@ -42,16 +40,12 @@ class BaseController<T> {
     async create(req: Request, res: Response) {
         const body = req.body;
         try {
-            console.log("Request body:", body);
-            console.log("postId type:", typeof body.postId); // הוספה כאן
-            console.log("owner type:", typeof body.owner); // הוספה כאן
             const item = await this.model.create(body);
             res.status(201).send(item);
         } catch (error) {
-            console.error("Create error:", error);
             res.status(400).send(error);
         }
-    }
+    };
 
     async deleteItem(req: Request, res: Response) {
         const id = req.params.id;
@@ -62,6 +56,8 @@ class BaseController<T> {
             res.status(400).send(error);
         }
     };
+
 }
 
-export default BaseController;
+
+export default BaseController
