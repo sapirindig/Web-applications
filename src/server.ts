@@ -44,10 +44,11 @@ app.get('/', (req: Request, res: Response) => {
     res.send('Welcome to my API!');
 });
 
+
 app.use("/posts", postsRoute);
 app.use("/comments", commentsRoute);
 app.use("/auth", authRoutes);
-app.use("/users", authMiddleware, userRoutes);
+app.use("/", userRoutes);
 app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 
 const options = {
