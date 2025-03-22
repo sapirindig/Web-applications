@@ -10,7 +10,7 @@ interface CreatePostModalProps {
 const CreatePostModal: React.FC<CreatePostModalProps> = ({ isOpen, onClose, onCreate }) => {
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
-    const [image, setImage] = useState<File | null>(null);
+    const [image, setImage] = useState<File | undefined>(undefined);
     const [imagePreview, setImagePreview] = useState<string | null>(null);
 
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -22,8 +22,17 @@ const CreatePostModal: React.FC<CreatePostModalProps> = ({ isOpen, onClose, onCr
     };
 
     const handleCreate = () => {
-        const owner = "defaultOwner"; // Replace with actual owner value
-        onCreate({ title, content, owner, image: image || undefined });
+        const owner = localStorage.getItem("userId"); // קבלת userId מה-localStorage
+        if (!owner) {
+            console.error("User ID not found in localStorage");
+            return;
+        }
+        onCreate({ owner, title, content, image });
+        // ניקוי שדות הטופס לאחר יצירה מוצלחת
+        setTitle('');
+        setContent('');
+        setImage(undefined);
+        setImagePreview(null);
         onClose();
     };
 
@@ -32,15 +41,15 @@ const CreatePostModal: React.FC<CreatePostModalProps> = ({ isOpen, onClose, onCr
     return (
         <div className={styles.modalOverlay} onClick={onClose}>
             <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
-                <h2>יצירת פוסט חדש</h2>
+                <h2>creat new post</h2>
                 <input
                     type="text"
-                    placeholder="כותרת"
+                    placeholder="title"
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
                 />
                 <textarea
-                    placeholder="תוכן"
+                    placeholder="content"
                     value={content}
                     onChange={(e) => setContent(e.target.value)}
                 />
