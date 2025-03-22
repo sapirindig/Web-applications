@@ -27,14 +27,31 @@ const UserProfile: React.FC = () => {
 
     const navigate = useNavigate();
 
+    // טעינת פרטי המשתמש וטעינת הפוסטים של המשתמש
     useEffect(() => {
+        const loadUserProfile = async () => {
+            const userId = localStorage.getItem("userId");
+            if (userId) {
+                try {
+                    const response = await axios.get(`http://localhost:3000/${userId}`);
+                    const { user } = response.data;
+                    console.log("User data received:", user);  // בדוק אם הנתונים נטענים
+                    setUserName(user.username);  // עדכון שם המשתמש
+                    setUserEmail(user.email);    // עדכון האימייל
+                } catch (error) {
+                    console.error("Error loading user data:", error);
+                }
+            }
+        };
+
+        loadUserProfile();
         loadUserPosts();
     }, []);
 
+    // טעינת הפוסטים של המשתמש
     const loadUserPosts = async () => {
         try {
             const userId = localStorage.getItem("userId");
-            console.log("User ID from localStorage:", localStorage.getItem("userId"));
             if (!userId) {
                 console.error("User ID not found");
                 return;
@@ -95,17 +112,12 @@ const UserProfile: React.FC = () => {
 
     const handleDeletePost = async (postId: string) => {
         try {
-            console.log("handleDeletePost called for postId:", postId);
-            console.log("localStorage:", localStorage);
             const token = localStorage.getItem("authToken");
-            console.log("Token from localStorage:", token);
 
             if (!token) {
                 console.error("Token not found");
                 return;
             }
-
-            console.log("Token found, sending delete request");
 
             await axios.delete(`http://localhost:3000/posts/${postId}`, {
                 headers: {
@@ -113,7 +125,6 @@ const UserProfile: React.FC = () => {
                 },
             });
             setUserPosts(userPosts.filter((post) => post._id !== postId));
-            console.log("Post deleted successfully");
         } catch (error) {
             console.error("Error deleting post:", error);
         }
@@ -129,7 +140,7 @@ const UserProfile: React.FC = () => {
     };
 
     const handleEditProfile = () => {
-        // כאן אתה יכול להוסיף את הלוגיקה לעריכת פרופיל המשתמש
+        // הוספת לוגיקה לעריכת פרופיל המשתמש
         console.log("Edit profile clicked");
     };
 
