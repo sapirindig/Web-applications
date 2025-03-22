@@ -202,29 +202,29 @@ export const authMiddleware = (req: Request, res: Response, next: NextFunction) 
     const authorization = req.header('authorization');
     const token = authorization && authorization.split(' ')[1];
 
-    console.log("Token received:", token); // הוספה כאן
+    console.log("Token received:", token);
 
     if (!token) {
-        console.log("Token not provided"); // הוספה כאן
+        console.log("Token not provided");
         res.status(401).send('Access Denied');
         return;
     }
 
     if (!process.env.TOKEN_SECRET) {
-        console.error("TOKEN_SECRET is not defined"); // הוספה כאן
+        console.error("TOKEN_SECRET is not defined");
         res.status(500).send('Server Error');
         return;
     }
 
     jwt.verify(token, process.env.TOKEN_SECRET, (err, payload) => {
         if (err) {
-            console.log("Token verification failed:", err); // הוספה כאן
+            console.log("Token verification failed:", err);
             res.status(401).send('Access Denied');
             return;
         }
 
-        console.log("Token payload:", payload); // הוספה כאן
-        req.user = (payload as Payload)._id; // שינוי כאן
+        console.log("Token payload:", payload); // הדפסה אחת מספיקה
+        req.user = (payload as Payload)._id; // הקצאה אחת מספיקה
         next();
     });
 };

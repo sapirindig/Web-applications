@@ -51,6 +51,7 @@ app.use("/auth", authRoutes);
 app.use("/", userRoutes);
 app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 
+
 const options = {
     definition: {
         openapi: "3.0.0",

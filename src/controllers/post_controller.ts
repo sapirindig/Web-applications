@@ -84,6 +84,69 @@ class PostsController extends BaseController<IPost> {
         }
     }
 }
+
+async update(req: Request, res: Response): Promise<void> {
+    console.log("req.body:", req.body); // הוסף לוג כאן
+    console.log("req.user in update (start):", req.user);
+
+    try {
+        const postId = req.params.id;
+        console.log("Received update request for post ID:", postId);
+        console.log("Auth Token:", req.headers.authorization);
+
+        console.log("Type of req.user:", typeof req.user);
+        console.log("Value of req.user:", req.user);
+
+        const post = await postModel.findById(postId);
+        if (!post) {
+            res.status(404).json({ message: "Post not found" });
+            return;
+        }
+
+        console.log("Type of post.owner:", typeof post.owner.toString());
+        console.log("Value of post.owner:", post.owner.toString());
+
+        if (post.owner.toString() !== req.user) {
+            res.status(401).json({ message: "Not authorized" });
+            return;
+        }
+
+        const { title, content } = req.body;
+        const image = req.file ? `/uploads/${req.file.filename}` : undefined;
+
+        console.log("Title from request:", title);
+        console.log("Content from request:", content);
+        console.log("Image from request:", image);
+
+        console.log("Post before update:", post); // לוג של הפוסט לפני העדכון
+
+        const updatedPost = await postModel.findByIdAndUpdate(
+            postId,
+            {
+                title: title || post.title,
+                content: content || post.content,
+                image: image || post.image,
+            },
+            { new: true }
+        );
+
+        console.log("Updated post from findByIdAndUpdate:", updatedPost); // לוג של הפוסט אחרי העדכון
+
+        if (!updatedPost) {
+            res.status(500).json({ message: "Failed to update post." });
+            return;
+        }
+
+        res.json(updatedPost);
+    } catch (error) {
+        if (error instanceof mongoose.Error.ValidationError) {
+            res.status(400).json({ message: error.message });
+            return;
+        }
+        console.error("Error updating post:", error);
+        res.status(500).json({ message: "Internal server error." });
+    }
+}
 }
 
 export default new PostsController();

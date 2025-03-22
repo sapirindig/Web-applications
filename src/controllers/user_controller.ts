@@ -5,7 +5,6 @@ import postModel from "../models/post_model";
 export const getUserProfile = async (req: Request, res: Response) => {
     try {
         const userId = req.params.id;
-        console.log("getUserProfile - Received userId:", userId);
 
         const user = await userModel.findById(userId);
         if (!user) {
@@ -14,11 +13,11 @@ export const getUserProfile = async (req: Request, res: Response) => {
         }
 
         const posts = await postModel.find({ owner: userId });
-        console.log("getUserProfile - Found posts:", posts);
+        console.log("getUserPosts - Found", posts.length, "posts");
+        console.log("getUserPosts - Found posts:", posts);
 
         res.status(200).send({ user, posts });
     } catch (err) {
-        console.error("getUserProfile - Error:", err);
         res.status(400).send(err);
     }
 };
