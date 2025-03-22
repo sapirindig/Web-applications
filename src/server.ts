@@ -48,8 +48,9 @@ app.get('/', (req: Request, res: Response) => {
 app.use("/posts", postsRoute);
 app.use("/comments", commentsRoute);
 app.use("/auth", authRoutes);
+app.use("/files", filerouter); 
 app.use("/", userRoutes);
-app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
+app.use("/uploads", express.static(path.join(__dirname, "../uploads")))
 
 
 const options = {

@@ -4,27 +4,42 @@ import multer from "multer";
 import path from "path";
 import fs from "fs";
 
-const base = process.env.DOMAIN_BASE + "/";
+const base = process.env.DOMAIN_BASE ? (process.env.DOMAIN_BASE.endsWith('/') ? process.env.DOMAIN_BASE : process.env.DOMAIN_BASE + '/') : 'http://localhost:3000/'; //default value
+
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-      const uploadDir = path.join(__dirname, "../../uploads"); // Correct path
-      if (!fs.existsSync(uploadDir)) {
-        fs.mkdirSync(uploadDir, { recursive: true });
-      }
-      cb(null, uploadDir);
+        const uploadDir = path.join(__dirname, "../../uploads");
+        if (!fs.existsSync(uploadDir)) {
+            fs.mkdirSync(uploadDir, { recursive: true });
+        }
+        cb(null, uploadDir);
     },
     filename: (req, file, cb) => {
-      cb(null, `${Date.now()}-${file.originalname}`);
+        cb(null, `${Date.now()}-${file.originalname}`);
     },
-  });
-  const upload = multer({ storage });
-
-router.post('/', upload.single("file"), function (req, res) {
-   if (req.file) {
-       console.log("router.post(/file: " + base + req.file.path)
-       res.status(200).send({ url: base + req.file.path })
-   } else {
-       res.status(400).send({ error: "File upload failed" })
-   }
 });
+
+const upload = multer({ storage });
+
+router.post('/', upload.single("file"), (req, res) => {
+    if (!req.file) {
+        res.status(400).send({ error: "No file uploaded." });
+        return; // Important: return here to prevent further execution
+    }
+
+    const relativePath = path.posix.join("uploads", req.file.filename);
+    const imageUrl = base + relativePath;
+
+    fs.access(req.file.path, fs.constants.F_OK, (err) => {
+        if (err) {
+            console.error("File not found after upload:", err);
+            res.status(500).send({ error: "File upload failed." });
+            return; // Important: return here to prevent further execution
+        }
+
+        console.log("Uploaded file URL:", imageUrl);
+        res.status(200).send({ url: imageUrl });
+    });
+});
+
 export = router;
