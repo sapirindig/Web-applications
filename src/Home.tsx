@@ -61,31 +61,46 @@ const Home: React.FC = () => {
                 alert("User is not logged in");
                 return;
             }
-
-            const postDataToSend = {
-                title: postData.title,
-                content: postData.content,
-                owner: postData.owner,
-                image: postData.image,
-            };
-
-            console.log("Post data being sent:", postDataToSend);
-
-            const response = await axios.post("http://localhost:3000/posts", postDataToSend, {
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${authToken}`,
+    
+            let imageUrl = undefined;
+            if (postData.image) {
+                const formData = new FormData();
+                formData.append("file", postData.image);
+    
+                const imageResponse = await axios.post("http://localhost:3000/files", formData, {
+                    headers: {
+                        "Content-Type": "multipart/form-data",
+                        Authorization: `Bearer ${authToken}`,
+                    },
+                });
+                imageUrl = imageResponse.data.url;
+                console.log("Uploaded Image URL:", imageUrl);
+            }
+    
+            const response = await axios.post(
+                "http://localhost:3000/posts",
+                {
+                    title: postData.title,
+                    content: postData.content,
+                    owner: postData.owner,
+                    image: imageUrl,
                 },
-            });
-
-            console.log("Server response:", response.data);
-
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${authToken}`,
+                    },
+                }
+            );
+    
+            console.log("Post creation response:", response.data);
+    
             const newPost: Post = response.data;
             setPosts((prevPosts) => [newPost, ...prevPosts]);
             setIsModalOpen(false);
         } catch (error: any) {
             console.error("Error creating post:", error.response?.data || error);
-            alert(`Failed to create post: ${error.response?.data?.message || 'Unknown error'}`);
+            alert(`Failed to create post: ${error.response?.data?.message || "Unknown error"}`);
         }
     };
 
