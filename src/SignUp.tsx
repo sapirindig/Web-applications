@@ -14,11 +14,12 @@ const SignUp: React.FC = () => {
         e.preventDefault();
         try {
             const response = await axios.post('http://localhost:3000/auth/register', {
+                username: fullName,
                 email: email,
                 password: password
             });
             console.log("Sign Up Successful:", response.data);
-            navigate('/userprofile');
+            navigate('/'); // מעבר לדף ההתחברות (Login)
         } catch (error) {
             console.error("Sign Up Failed:", error);
         }
