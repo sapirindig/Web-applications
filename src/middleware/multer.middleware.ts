@@ -34,4 +34,7 @@ export const upload = multer({
 });
 
 console.log("Multer configuration loaded.");
+<<<<<<< HEAD
 
+=======
+>>>>>>> 74a9ffe4320cc94c901f683a933139af96cc1d75

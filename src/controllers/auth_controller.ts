@@ -42,16 +42,16 @@ const generateToken = (userId: string): { accessToken: string; refreshToken: str
 
 const register = async (req: Request, res: Response) => {
     try {
-        const password = req.body.password;
+        const { email, password, username } = req.body;
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
         const user = await userModel.create({
-            email: req.body.email,
+            email: email,
             password: hashedPassword,
+            username: username,
         });
 
-        // Generate token after user creation
-        const tokens = generateToken(user._id.toString()); // user._id is an object, so convert to string
+        const tokens = generateToken(user._id.toString());
 
         if (!tokens) {
             return res.status(500).send('Server Error: Token generation failed');
@@ -83,14 +83,13 @@ const login = async (req: Request, res: Response) => {
             res.status(500).send('Server Error');
             return;
         }
-        // generate token
         const tokens = generateToken(user._id);
         if (!tokens) {
             res.status(500).send('Server Error');
             return;
         }
         if (!user.refreshToken) {
-            user.refreshToken =[];
+            user.refreshToken = [];
         }
         user.refreshToken.push(tokens.refreshToken);
         await user.save();
@@ -113,12 +112,10 @@ type tUser = Document<unknown, {}, IUser> &
     };
 const verifyRefreshToken = (refreshToken: string | undefined) => {
     return new Promise<tUser>((resolve, reject) => {
-        //get refresh token from body
         if (!refreshToken) {
             reject('fail');
             return;
         }
-        //verify token
         if (!process.env.TOKEN_SECRET) {
             reject('fail');
             return;
@@ -128,24 +125,21 @@ const verifyRefreshToken = (refreshToken: string | undefined) => {
                 reject('fail');
                 return;
             }
-            //get the user id fromn token
             const userId = payload._id;
             try {
-                //get the user form the db
                 const user = await userModel.findById(userId);
                 if (!user) {
                     reject('fail');
                     return;
                 }
                 if (!user.refreshToken || !user.refreshToken.includes(refreshToken)) {
-                    user.refreshToken =[];
+                    user.refreshToken = [];
                     await user.save();
                     reject('fail');
                     return;
                 }
                 const tokens = user.refreshToken!.filter((token) => token !== refreshToken);
                 user.refreshToken = tokens;
-
                 resolve(user);
             } catch (err) {
                 reject('fail');
@@ -179,7 +173,7 @@ const refresh = async (req: Request, res: Response) => {
             return;
         }
         if (!user.refreshToken) {
-            user.refreshToken =[];
+            user.refreshToken = [];
         }
         user.refreshToken.push(tokens.refreshToken);
         await user.save();
@@ -188,7 +182,6 @@ const refresh = async (req: Request, res: Response) => {
             refreshToken: tokens.refreshToken,
             _id: user._id,
         });
-        //send new token
     } catch (err) {
         res.status(400).send('fail');
     }
@@ -223,8 +216,8 @@ export const authMiddleware = (req: Request, res: Response, next: NextFunction) 
             return;
         }
 
-        console.log("Token payload:", payload); // הדפסה אחת מספיקה
-        req.user = (payload as Payload)._id; // הקצאה אחת מספיקה
+        console.log("Token payload:", payload);
+        req.user = (payload as Payload)._id;
         next();
     });
 };
@@ -234,5 +227,4 @@ export default {
     login: login as (req: Request, res: Response) => Promise<void>,
     refresh: refresh as (req: Request, res: Response) => Promise<void>,
     logout: logout as (req: Request, res: Response) => Promise<void>,
-
 };
