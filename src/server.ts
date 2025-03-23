@@ -61,7 +61,7 @@ const options = {
             version: "1.0.0",
             description: "REST server including authentication using JWT",
         },
-        servers: [{ url: "http://localhost:3000" }],
+        servers: [{ url: "https://node47.cs.colman.ac.il:4000" }], // עדכון כאן
     },
     apis: ["./src/routes/*.ts"],
 };

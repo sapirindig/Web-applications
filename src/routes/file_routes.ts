@@ -4,7 +4,13 @@ import multer from "multer";
 import path from "path";
 import fs from "fs";
 
-const base = process.env.DOMAIN_BASE ? (process.env.DOMAIN_BASE.endsWith('/') ? process.env.DOMAIN_BASE : process.env.DOMAIN_BASE + '/') : 'http://localhost:3000/'; //default value
+const DEFAULT_DOMAIN = "http://localhost:3000"; // Define your default domain here
+
+const base = process.env.DOMAIN_BASE
+  ? process.env.DOMAIN_BASE.endsWith('/')
+    ? process.env.DOMAIN_BASE
+    : `${process.env.DOMAIN_BASE}/`
+  : DEFAULT_DOMAIN;
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
