@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { fetchPosts, Post } from "./api";
+import { fetchPosts, Post } from "./Api";
 import axios from "axios";
 import HomeComponents from './components/homeComponent';
-import styles from './components/Home.module.css'; // ייבוא סגנונות
+import styles from './components/Home.module.css'; 
 
 const Home: React.FC = () => {
     const [posts, setPosts] = useState<Post[]>([]);

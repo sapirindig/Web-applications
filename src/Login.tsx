@@ -5,7 +5,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import GoogleLoginButton from "./components/GoogleLoginButton";
 import axios from 'axios';
 
-
 const Login: React.FC = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -17,30 +16,41 @@ const Login: React.FC = () => {
         try {
             const response = await axios.post('http://localhost:3000/auth/login', { email, password });
 
-            if (response.status === 200) { // בדיקה שהבקשה הצליחה
+            if (response.status === 200) {
                 localStorage.setItem('authToken', response.data.accessToken);
                 localStorage.setItem('userId', response.data._id);
-                localStorage.setItem("authToken", response.data.accessToken);
-                console.log("Saved token to localStorage:", response.data.accessToken);
                 navigate('/home');
             } else {
                 setError('Invalid email or password');
             }
         } catch (err) {
-            console.error("Login error:", err); // הוספה כאן
+            console.error("Login error:", err);
             if (axios.isAxiosError(err) && err.response && err.response.status === 401) {
                 setError('Invalid email or password');
             } else {
                 setError('Login failed. Please try again.');
             }
-
         }
-        
     };
-    
-    function handleGoogleLoginSuccess(): void {
-        throw new Error("Function not implemented.");
-    }
+
+    const handleGoogleLoginSuccess = async (credentialResponse: any) => {
+        try {
+            const response = await axios.post('http://localhost:3000/auth/googleLogin', {
+                token: credentialResponse.credential,
+            });
+
+            if (response.status === 200) {
+                localStorage.setItem('authToken', response.data.accessToken);
+                localStorage.setItem('userId', response.data._id);
+                navigate('/home');
+            } else {
+                setError('Google login failed');
+            }
+        } catch (err) {
+            console.error("Google login error:", err);
+            setError('Google login failed. Please try again.');
+        }
+    };
 
     return (
         <div className={styles.loginContainer}>

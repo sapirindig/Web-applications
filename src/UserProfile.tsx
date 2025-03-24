@@ -35,14 +35,21 @@ const UserProfile: React.FC = () => {
                 try {
                     const response = await axios.get(`http://localhost:3000/${userId}`);
                     const { user } = response.data;
-                    console.log("User data received:", user);  // בדוק אם הנתונים נטענים
-                    setUserName(user.username);  // עדכון שם המשתמש
-                    setUserEmail(user.email);    // עדכון האימייל
+                    console.log("User data received:", user);
+                    if (user) {
+                        setUserName(user.username);
+                        setUserEmail(user.email);
+                    } else {
+                        console.error("User data not found in response");
+                    }
                 } catch (error) {
                     console.error("Error loading user data:", error);
                 }
+            } else {
+                console.error("User ID not found in localStorage");
             }
         };
+
 
         loadUserProfile();
         loadUserPosts();
@@ -140,7 +147,6 @@ const UserProfile: React.FC = () => {
     };
 
     const handleEditProfile = () => {
-        // הוספת לוגיקה לעריכת פרופיל המשתמש
         console.log("Edit profile clicked");
     };
 
@@ -160,8 +166,8 @@ const UserProfile: React.FC = () => {
                         <img src={userImage} alt="User Profile" className={styles.profileImage} />
                     </div>
                     <div className={styles.userDetails}>
-                        <p className={styles.userDetail}>name: {userName}</p>
-                        <p className={styles.userDetail}>e-mail: {userEmail}</p>
+                        <p className={styles.userName}>{userName}</p>
+                        <p className={styles.userEmail}>{userEmail}</p>
                     </div>
                     <div className={styles.profileButtons}>
                         <button className={styles.profileButton} onClick={handleShowPosts}>My posts</button>

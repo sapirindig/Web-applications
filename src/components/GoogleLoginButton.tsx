@@ -1,7 +1,7 @@
 import { GoogleLogin } from '@react-oauth/google';
 
 interface GoogleLoginButtonProps {
-    onSuccess: () => void;
+    onSuccess: (credentialResponse: any) => void; // שינוי כאן
 }
 
 const GoogleLoginButton: React.FC<GoogleLoginButtonProps> = ({ onSuccess }) => {
@@ -10,7 +10,7 @@ const GoogleLoginButton: React.FC<GoogleLoginButtonProps> = ({ onSuccess }) => {
             <GoogleLogin
                 onSuccess={(credentialResponse) => {
                     console.log("✅ Login Success:", credentialResponse);
-                    onSuccess();
+                    onSuccess(credentialResponse); // שינוי כאן
                 }}
                 onError={() => {
                     console.log("❌ Login Failed");

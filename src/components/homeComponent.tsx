@@ -2,7 +2,9 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import styles from './Home.module.css';
 import CreatePostModal from '../CreatePostModal';
-import { Post } from '../api';
+import { Post } from '../Api';
+
+
 
 interface HomeComponentsProps {
     posts: Post[];
