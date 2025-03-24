@@ -1,6 +1,6 @@
 import express from "express";
 const router = express.Router();
-import authController from "../controllers/auth_controller";
+import authController, { authMiddleware } from "../controllers/auth_controller";
 
 /**
 * @swagger
@@ -168,5 +168,65 @@ router.post("/refresh", authController.refresh);
  */
 router.post("/logout", authController.logout);
 
+/**
+ * @swagger
+ * /auth/googleLogin:
+ * post:
+ * summary: Google login
+ * description: Authenticate with Google
+ * tags: [Auth]
+ * requestBody:
+ * required: true
+ * content:
+ * application/json:
+ * schema:
+ * type: object
+ * properties:
+ * token:
+ * type: string
+ * responses:
+ * 200:
+ * description: Login successful
+ */
+router.post("/googleLogin", authController.googleLogin);
+
+/**
+ * @swagger
+ * /auth/checkPassword:
+ * get:
+ * summary: Check password
+ * description: Check if user has password
+ * tags: [Auth]
+ * security:
+ * - bearerAuth: []
+ * responses:
+ * 200:
+ * description: Check successful
+ */
+router.get("/checkPassword", authMiddleware, authController.checkPassword);
+
+/**
+ * @swagger
+ * /auth/setPassword:
+ * post:
+ * summary: Set password
+ * description: Set user password
+ * tags: [Auth]
+ * security:
+ * - bearerAuth: []
+ * requestBody:
+ * required: true
+ * content:
+ * application/json:
+ * schema:
+ * type: object
+ * properties:
+ * password:
+ * type: string
+ * responses:
+ * 200:
+ * description: Password set
+ */
+router.post("/setPassword", authMiddleware, authController.setPassword);
 
 export default router;

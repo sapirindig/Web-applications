@@ -3,9 +3,11 @@ import mongoose from "mongoose";
 export interface IUser {
   username: string;
   email: string;
-  password: string;
+  password?: string; // סיסמה אופציונלית
   _id?: string;
   refreshToken?: string[];
+  googleId?: string;
+  profilePicture?: string;
 }
 
 const userSchema = new mongoose.Schema<IUser>({
@@ -20,11 +22,19 @@ const userSchema = new mongoose.Schema<IUser>({
   },
   password: {
     type: String,
-    required: true,
+    required: false, // סיסמה אופציונלית
   },
   refreshToken: {
     type: [String],
     default: [],
+  },
+  googleId: {
+    type: String,
+    unique: true,
+    sparse: true,
+  },
+  profilePicture: {
+    type: String,
   },
 });
 
